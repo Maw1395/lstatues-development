@@ -6,9 +6,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -55,34 +57,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         // setContentView(R.layout.main_activity);
-        mContext = getApplicationContext();
-        MyContentProvider db = new MyContentProvider();
-        values = new ContentValues();
-        values.put("name", "J. Stanley Marshall Plaza");
-        values.put("description", "J. Stanley Marshall served as President of Florida State University from 1967-1976.");
-        values.put("longitude", 30.443694305537228);
-        values.put("latitude", -84.29701179346921);
-        getContentResolver().insert(db.CONTENT_URI, values);
-        values = new ContentValues();
-        values.put("name", "Sportsmanship");
-        values.put("description", "Sportsmanship stands 15’ tall and is assembled from two hundred individually cast bronze pieces.");
-        values.put("longitude", 30.437375357840484);
-        values.put("latitude", -84.3053388599219);
-        getContentResolver().insert(db.CONTENT_URI, values);
-        values = new ContentValues();
-        values.put("name", "Unconquered Statue");
-        values.put("description", "Unconquered rises above the Williams Family Plaza at the north end of Langford Green outside the south entrance to Doak S. Campbell Stadium.");
-        values.put("longitude", 30.436916322272662);
-        values.put("latitude", -84.30301050539123);
-        getContentResolver().insert(db.CONTENT_URI, values);
-        values = new ContentValues();
-        values.put("name", "Integration Statue");
-        values.put("description", "The Integration Sculpture celebrates students who pioneered integration at FSU.");
-        values.put("longitude", 30.443826569432975);
-        values.put("latitude", -84.29803133010864);
-        getContentResolver().insert(db.CONTENT_URI, values);
+       jankyDatabaseSetup();
 
         setContentView(R.layout.activity_maps);
+        checkApplicationPermission();
         //setup buttons
         Button B2 = (Button) findViewById(R.id.button2);
         Button B1 = (Button) findViewById(R.id.button3);
@@ -124,6 +102,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //mainFT.commit();
 
     }
+    protected void jankyDatabaseSetup()
+    {
+        mContext = getApplicationContext();
+        MyContentProvider db = new MyContentProvider();
+        values = new ContentValues();
+        values.put("name", "J. Stanley Marshall Plaza");
+        values.put("description", "J. Stanley Marshall served as President of Florida State University from 1967-1976.");
+        values.put("longitude", 30.443694305537228);
+        values.put("latitude", -84.29701179346921);
+        getContentResolver().insert(db.CONTENT_URI, values);
+        values = new ContentValues();
+        values.put("name", "Sportsmanship");
+        values.put("description", "Sportsmanship stands 15’ tall and is assembled from two hundred individually cast bronze pieces.");
+        values.put("longitude", 30.437375357840484);
+        values.put("latitude", -84.3053388599219);
+        getContentResolver().insert(db.CONTENT_URI, values);
+        values = new ContentValues();
+        values.put("name", "Unconquered Statue");
+        values.put("description", "Unconquered rises above the Williams Family Plaza at the north end of Langford Green outside the south entrance to Doak S. Campbell Stadium.");
+        values.put("longitude", 30.436916322272662);
+        values.put("latitude", -84.30301050539123);
+        getContentResolver().insert(db.CONTENT_URI, values);
+        values = new ContentValues();
+        values.put("name", "Integration Statue");
+        values.put("description", "The Integration Sculpture celebrates students who pioneered integration at FSU.");
+        values.put("longitude", 30.443826569432975);
+        values.put("latitude", -84.29803133010864);
+        getContentResolver().insert(db.CONTENT_URI, values);
+    }
+    public void checkApplicationPermission()
+    {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            finish();
+        }
+    }
+
 
 
     public void STSEButton(View view){
